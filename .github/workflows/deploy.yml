@@ -7,14 +7,19 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Fetch all history for all branches and tags
+
+    - name: Unshallow repository
+      run: git fetch --all --unshallow
 
     - name: Deploy to Heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: |
-        git push https://heroku:$HEROKU_API_KEY@git.heroku.com/northwind-app.git main
+        git push https://heroku:$HEROKU_API_KEY@git.heroku.com/<your-heroku-app-name>.git main
